@@ -36,6 +36,7 @@ export interface AnalyticsDataPayload {
     category: string;
     progress: number;
   }>;
+  activeDates?: string[];
 }
 
 export const analyticsApi = {

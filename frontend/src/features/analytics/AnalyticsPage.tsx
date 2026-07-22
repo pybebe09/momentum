@@ -50,14 +50,23 @@ export const AnalyticsPage: React.FC = () => {
   const taskDistribution = telemetry?.taskStatusDistribution || [];
   const goalDistribution = telemetry?.goalProgressDistribution || [];
 
-  // Generate 52 weeks x 7 days heatmap cells
+  const getCellDateString = (w: number, d: number) => {
+    const today = new Date();
+    const daysAgo = (51 - w) * 7 + (6 - d);
+    const date = new Date(today.getTime() - daysAgo * 24 * 60 * 60 * 1000);
+    return date.toISOString().split('T')[0];
+  };
+
+  // Generate 52 weeks x 7 days heatmap cells using real activeDates
   const generateHeatmapGrid = () => {
+    const activeDatesSet = new Set(telemetry?.activeDates || []);
     const cells = [];
     for (let w = 0; w < 52; w++) {
       for (let d = 0; d < 7; d++) {
-        // Random activity level 0-4 for visual demonstration
-        const intensity = Math.floor(Math.sin(w * 0.3 + d * 0.5) * 2.5 + 2);
-        cells.push({ week: w, day: d, intensity });
+        const dateStr = getCellDateString(w, d);
+        const isActive = activeDatesSet.has(dateStr);
+        const intensity = isActive ? 3 : 0;
+        cells.push({ week: w, day: d, intensity, date: dateStr });
       }
     }
     return cells;
@@ -415,7 +424,7 @@ export const AnalyticsPage: React.FC = () => {
             {heatmapCells.map((cell, idx) => (
               <div
                 key={idx}
-                title={`Week ${cell.week + 1}, Day ${cell.day + 1} — Activity Level: ${cell.intensity}`}
+                title={`${cell.date}: ${cell.intensity > 0 ? 'Active Session / Task Completed' : 'No Activity'}`}
                 className={`w-3.5 h-3.5 rounded-sm transition-all duration-200 hover:scale-125 cursor-pointer ${getHeatmapColor(
                   cell.intensity
                 )}`}

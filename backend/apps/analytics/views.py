@@ -209,4 +209,5 @@ class SystemTelemetryView(APIView):
             'monthlyData': monthly_data,
             'taskStatusDistribution': task_status_distribution,
             'goalProgressDistribution': goal_progress_distribution,
+            'activeDates': [d.isoformat() for d in sorted_dates],
         })
