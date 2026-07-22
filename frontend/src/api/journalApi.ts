@@ -41,9 +41,10 @@ const saveStoredEntries = (entries: JournalEntry[]) => {
 export const journalApi = {
   getEntries: async (): Promise<JournalEntry[]> => {
     try {
-      const response = await axiosClient.get<any[]>('/journal/');
-      if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-        const fetchedEntries: JournalEntry[] = response.data.map((item) => ({
+      const response = await axiosClient.get<any>('/journal/');
+      const rawData = Array.isArray(response.data) ? response.data : (response.data?.results || null);
+      if (rawData !== null && Array.isArray(rawData)) {
+        const fetchedEntries: JournalEntry[] = rawData.map((item) => ({
           id: String(item.id),
           title: item.title,
           content: item.content || '',
@@ -60,7 +61,7 @@ export const journalApi = {
         return fetchedEntries;
       }
     } catch (e) {
-      console.warn("Backend journal unavailable, loading local persistence store.", e);
+      console.warn("Backend unavailable, loading local persistence store.", e);
     }
     return getStoredEntries();
   },

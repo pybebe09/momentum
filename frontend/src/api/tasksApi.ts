@@ -39,9 +39,10 @@ const saveStoredTasks = (tasks: TaskItem[]) => {
 export const tasksApi = {
   getTasks: async (): Promise<TaskItem[]> => {
     try {
-      const response = await axiosClient.get<any[]>('/tasks/');
-      if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-        const fetchedTasks: TaskItem[] = response.data.map((item) => ({
+      const response = await axiosClient.get<any>('/tasks/');
+      const rawData = Array.isArray(response.data) ? response.data : (response.data?.results || null);
+      if (rawData !== null && Array.isArray(rawData)) {
+        const fetchedTasks: TaskItem[] = rawData.map((item) => ({
           id: String(item.id),
           title: item.title,
           description: item.description || '',

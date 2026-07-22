@@ -42,9 +42,10 @@ const saveStoredGoals = (goals: GoalItem[]) => {
 export const goalsApi = {
   getGoals: async (): Promise<GoalItem[]> => {
     try {
-      const response = await axiosClient.get<any[]>('/goals/');
-      if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-        const fetchedGoals: GoalItem[] = response.data.map((item) => ({
+      const response = await axiosClient.get<any>('/goals/');
+      const rawData = Array.isArray(response.data) ? response.data : (response.data?.results || null);
+      if (rawData !== null && Array.isArray(rawData)) {
+        const fetchedGoals: GoalItem[] = rawData.map((item) => ({
           id: String(item.id),
           title: item.title,
           description: item.description || '',
@@ -61,7 +62,7 @@ export const goalsApi = {
         return fetchedGoals;
       }
     } catch (e) {
-      console.warn("Backend goals unavailable, loading local persistence store.", e);
+      console.warn("Backend unavailable, loading local persistence store.", e);
     }
     return getStoredGoals();
   },
