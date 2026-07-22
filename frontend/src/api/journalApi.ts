@@ -137,26 +137,41 @@ export const journalApi = {
 
     const current = getStoredEntries();
     let updatedEntry: JournalEntry | null = null;
-    const updated = current.map((e) => {
-      if (e.id === id) {
-        updatedEntry = { ...e, ...payload };
+    const updated = current.map((item) => {
+      if (String(item.id) === String(id)) {
+        updatedEntry = { ...item, ...payload };
         return updatedEntry;
       }
-      return e;
+      return item;
     });
     saveStoredEntries(updated);
-    return updatedEntry || { id, title: 'Updated', content: '', mood: 'FOCUSED', energyLevel: 8, tags: [], entryDate: '', createdAt: '', ...payload };
+    return (
+      updatedEntry || {
+        id,
+        title: 'Updated Entry',
+        content: '',
+        question1: '',
+        question2: '',
+        question3: '',
+        mood: 'FOCUSED',
+        energyLevel: 8,
+        tags: [],
+        entryDate: new Date().toISOString().split('T')[0],
+        createdAt: new Date().toISOString(),
+        ...payload,
+      }
+    );
   },
 
   deleteEntry: async (id: string): Promise<void> => {
     try {
       await axiosClient.delete(`/journal/${id}/`);
     } catch (e) {
-      console.warn("Backend delete journal error, removing from local store.", e);
+      console.warn("Backend delete entry error, removing from local store.", e);
     }
 
     const current = getStoredEntries();
-    const updated = current.filter((e) => e.id !== id);
+    const updated = current.filter((item) => String(item.id) !== String(id));
     saveStoredEntries(updated);
   },
 };

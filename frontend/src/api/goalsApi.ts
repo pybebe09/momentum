@@ -134,7 +134,7 @@ export const goalsApi = {
     const current = getStoredGoals();
     let updatedGoal: GoalItem | null = null;
     const updated = current.map((g) => {
-      if (g.id === id) {
+      if (String(g.id) === String(id)) {
         updatedGoal = { ...g, ...payload };
         return updatedGoal;
       }
@@ -152,7 +152,7 @@ export const goalsApi = {
     }
 
     const current = getStoredGoals();
-    const updated = current.filter((g) => g.id !== id);
+    const updated = current.filter((g) => String(g.id) !== String(id));
     saveStoredGoals(updated);
   },
 };

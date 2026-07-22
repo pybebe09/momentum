@@ -118,7 +118,7 @@ export const tasksApi = {
     const current = getStoredTasks();
     let updatedTask: TaskItem | null = null;
     const updated = current.map((t) => {
-      if (t.id === id) {
+      if (String(t.id) === String(id)) {
         updatedTask = { ...t, ...payload };
         return updatedTask;
       }
@@ -136,7 +136,7 @@ export const tasksApi = {
     }
 
     const current = getStoredTasks();
-    const updated = current.filter((t) => t.id !== id);
+    const updated = current.filter((t) => String(t.id) !== String(id));
     saveStoredTasks(updated);
   },
 };

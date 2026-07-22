@@ -97,16 +97,20 @@ class LoginView(APIView):
         identifier = serializer.validated_data['email_or_username']
         password = serializer.validated_data['password']
 
-        # Support login via email or username
+        # Support login via email or username (case-insensitive)
         user = None
         if '@' in identifier:
             try:
-                user_obj = User.objects.get(email=identifier)
+                user_obj = User.objects.get(email__iexact=identifier)
                 user = authenticate(username=user_obj.username, password=password)
             except User.DoesNotExist:
                 user = None
         else:
-            user = authenticate(username=identifier, password=password)
+            try:
+                user_obj = User.objects.get(username__iexact=identifier)
+                user = authenticate(username=user_obj.username, password=password)
+            except User.DoesNotExist:
+                user = authenticate(username=identifier, password=password)
 
         if not user:
             return Response(
