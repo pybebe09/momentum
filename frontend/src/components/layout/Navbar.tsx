@@ -121,10 +121,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar }) => {
           />
           <div className="text-left text-xs">
             <span className="font-bold text-primary-text block leading-tight">
-              {user?.firstName || 'Operator'}
+              {user?.firstName || 'BEGI'}
             </span>
             <span className="text-[10px] font-mono text-cyan-400 leading-tight">
-              {user?.role || 'OPERATOR'}
+              {user?.role || 'CEO'}
             </span>
           </div>
         </div>

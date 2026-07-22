@@ -1,4 +1,4 @@
-export type UserRole = 'OPERATOR' | 'ADMIN' | 'ANALYST';
+export type UserRole = 'CEO' | 'ADMIN' | 'ANALYST';
 export type ThemeMode = 'dark' | 'light';
 
 export interface SystemTelemetry {

@@ -213,10 +213,10 @@ export const SettingsPage: React.FC = () => {
             <Card glow="blue" className="p-6 max-w-3xl space-y-6">
               <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div>
-                  <h3 className="text-base font-bold text-slate-100">Operator Profile Details</h3>
+                  <h3 className="text-base font-bold text-slate-100">CEO Profile Details</h3>
                   <p className="text-xs text-slate-400 font-mono">PERSONAL IDENTIFICATION & AVATAR</p>
                 </div>
-                <Badge variant="blue">ROLE: {user?.role || 'OPERATOR'}</Badge>
+                <Badge variant="blue">ROLE: {user?.role || 'CEO'}</Badge>
               </div>
 
               <form onSubmit={handleSaveProfile} className="space-y-4">

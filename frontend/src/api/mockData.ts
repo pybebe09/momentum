@@ -6,7 +6,7 @@ export const MOCK_USER = {
   email: 'alex.vance@momentum.cyber',
   firstName: 'Alex',
   lastName: 'Vance',
-  role: 'OPERATOR' as const,
+  role: 'CEO' as const,
   avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80',
   createdAt: '2026-01-15T08:00:00Z',
 };
