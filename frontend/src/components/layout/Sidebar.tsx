@@ -41,6 +41,29 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
     navigate('/login');
   };
 
+  const [latency, setLatency] = React.useState<number | null>(null);
+  const [isOnline, setIsOnline] = React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    const checkStatus = async () => {
+      const start = performance.now();
+      try {
+        // Send request to live Render API
+        await fetch('https://momentum-backend-api.onrender.com/api/analytics/telemetry/', {
+          method: 'HEAD',
+        });
+        setLatency(Math.round(performance.now() - start));
+        setIsOnline(true);
+      } catch {
+        setIsOnline(false);
+      }
+    };
+
+    checkStatus();
+    const interval = setInterval(checkStatus, 20000); // Check every 20 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   const SidebarContent = (
     <div className="flex flex-col h-full justify-between p-4">
       <div className="space-y-6">
@@ -115,11 +138,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
         <div className="p-3 rounded-xl bg-primary-bg/60 border border-border-accent space-y-1">
           <div className="flex items-center justify-between text-[11px] font-mono">
             <span className="text-secondary-text flex items-center gap-1">
-              <Activity className="w-3 h-3 text-emerald-400" /> SYSTEM
+              <Activity className={clsx('w-3 h-3', isOnline ? 'text-emerald-400' : 'text-rose-400')} /> SYSTEM
             </span>
-            <span className="text-emerald-400 font-bold">ONLINE</span>
+            <span className={clsx('font-bold', isOnline ? 'text-emerald-400' : 'text-rose-400')}>
+              {isOnline ? 'ONLINE' : 'OFFLINE'}
+            </span>
           </div>
-          <p className="text-[10px] font-mono text-slate-500">LATENCY: 14ms • 99.9%</p>
+          <p className="text-[10px] font-mono text-slate-500">
+            LATENCY: {latency ? `${latency}ms` : 'Checking...'} • {isOnline ? '99.9%' : '0.0%'}
+          </p>
         </div>
 
         {/* Logout Button */}
