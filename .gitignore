@@ -1,0 +1,19 @@
+# Node / Vite
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vscode/
+.idea/
+
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+*.log
+venv/
+env/
+.env
+staticfiles/
+.DS_Store

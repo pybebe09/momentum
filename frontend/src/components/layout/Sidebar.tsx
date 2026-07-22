@@ -1,0 +1,169 @@
+import React from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import {
+  LayoutDashboard,
+  CheckSquare,
+  Target,
+  Timer,
+  BookOpen,
+  BarChart3,
+  Settings,
+  LogOut,
+  Shield,
+  Activity,
+  X,
+} from 'lucide-react';
+import { clsx } from 'clsx';
+import { motion, AnimatePresence } from 'framer-motion';
+
+interface SidebarProps {
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const navItems = [
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/tasks', label: 'Tasks', icon: CheckSquare },
+    { to: '/goals', label: 'Goals', icon: Target },
+    { to: '/focus', label: 'Focus Mode', icon: Timer },
+    { to: '/journal', label: 'Daily Journal', icon: BookOpen },
+    { to: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { to: '/settings', label: 'Settings', icon: Settings },
+  ];
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const SidebarContent = (
+    <div className="flex flex-col h-full justify-between p-4">
+      <div className="space-y-6">
+        {/* Header Logo */}
+        <div className="flex items-center justify-between px-2 pt-2">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+              <Shield className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="font-extrabold text-sm tracking-wider text-slate-100 uppercase">
+                MOMENTUM
+              </span>
+              <span className="text-[10px] block font-mono text-cyan-400">
+                MISSION CONTROL
+              </span>
+            </div>
+          </div>
+
+          {/* Close button for mobile */}
+          {onCloseMobile && (
+            <button
+              onClick={onCloseMobile}
+              className="lg:hidden p-1.5 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+        </div>
+
+        {/* Navigation Items */}
+        <nav className="space-y-1.5" aria-label="Main Navigation">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={onCloseMobile}
+                className={({ isActive }) =>
+                  clsx(
+                    'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all relative',
+                    {
+                      'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 shadow-[0_0_15px_rgba(0,240,255,0.15)]':
+                        isActive,
+                      'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60': !isActive,
+                    }
+                  )
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span>{item.label}</span>
+                    {isActive && (
+                      <motion.span
+                        layoutId="activeIndicator"
+                        className="absolute right-2 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]"
+                      />
+                    )}
+                  </>
+                )}
+              </NavLink>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Sidebar Footer: Telemetry Badge & Logout */}
+      <div className="space-y-3 pt-4 border-t border-slate-800/80">
+        {/* Telemetry Status Card */}
+        <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1">
+          <div className="flex items-center justify-between text-[11px] font-mono">
+            <span className="text-slate-400 flex items-center gap-1">
+              <Activity className="w-3 h-3 text-emerald-400" /> SYSTEM
+            </span>
+            <span className="text-emerald-400 font-bold">ONLINE</span>
+          </div>
+          <p className="text-[10px] font-mono text-slate-500">LATENCY: 14ms • 99.9%</p>
+        </div>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/30 border border-transparent transition-all"
+        >
+          <LogOut className="w-4 h-4" />
+          <span>Sign Out Session</span>
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar (Fixed Left Navigation) */}
+      <aside className="hidden lg:block w-64 border-r border-slate-800/80 bg-slate-950/80 backdrop-blur-xl h-screen sticky top-0 shrink-0">
+        {SidebarContent}
+      </aside>
+
+      {/* Mobile Drawer Overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onCloseMobile}
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+            />
+            <motion.aside
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+              className="relative w-72 bg-slate-950 border-r border-slate-800 h-full shadow-2xl z-10"
+            >
+              {SidebarContent}
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};

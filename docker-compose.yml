@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: momentum_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-momentum_db}
+      POSTGRES_USER: ${DB_USER:-momentum_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-momentum_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-momentum_user} -d ${DB_NAME:-momentum_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: momentum_backend
+    restart: always
+    environment:
+      DEBUG: "False"
+      SECRET_KEY: ${SECRET_KEY:-django-insecure-momentum-production-secret-key-2026}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend,frontend}
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: ${DB_NAME:-momentum_db}
+      DB_USER: ${DB_USER:-momentum_user}
+      DB_PASSWORD: ${DB_PASSWORD:-momentum_password}
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: momentum_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

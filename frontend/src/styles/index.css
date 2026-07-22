@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cyber-dark: #080c14;
+  --color-cyber-card: #0f172a;
+  --color-cyber-panel: #131c31;
+  --color-cyber-border: rgba(56, 189, 248, 0.15);
+  --color-cyber-glowBlue: #00f0ff;
+  --color-cyber-glowGreen: #00ff9d;
+  --color-cyber-accentBlue: #0a84ff;
+  --color-cyber-accentGreen: #10b981;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@layer base {
+  :root {
+    --bg-primary: #060911;
+    --bg-secondary: #0d1322;
+    --bg-card: rgba(13, 19, 34, 0.75);
+    --border-color: rgba(56, 189, 248, 0.14);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-blue: #00f0ff;
+    --accent-green: #00ff9d;
+  }
+
+  .light {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.88);
+    --border-color: rgba(14, 165, 233, 0.18);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --accent-blue: #0284c7;
+    --accent-green: #059669;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, sans-serif;
+    overflow-x: hidden;
+    letter-spacing: -0.011em;
+    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Apple-Inspired Glassmorphism & Cyber Mission Control Styling */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border-color);
+}
+
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 240, 255, 0.35);
+  box-shadow: 0 16px 45px -10px rgba(0, 240, 255, 0.18), 0 0 1px 1px rgba(255, 255, 255, 0.05) inset;
+  transform: translateY(-2px);
+}
+
+/* Accessibility Focus Ring Utility */
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/80 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
+}
+
+/* Neon Text & Glowing Border Accents */
+.neon-text-blue {
+  color: #00f0ff;
+  text-shadow: 0 0 14px rgba(0, 240, 255, 0.45);
+}
+
+.neon-text-green {
+  color: #00ff9d;
+  text-shadow: 0 0 14px rgba(0, 255, 157, 0.45);
+}
+
+.animate-float {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+/* Cyber Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(6, 9, 17, 0.8);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 240, 255, 0.5);
+}
