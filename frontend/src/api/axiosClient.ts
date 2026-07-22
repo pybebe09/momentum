@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://momentum-backend-api.onrender.com/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export const getStoredToken = (): string | null => {
   return localStorage.getItem('momentum_token') || sessionStorage.getItem('momentum_token');

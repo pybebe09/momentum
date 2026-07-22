@@ -28,11 +28,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Hydrate user profile on initialization if token exists
+  // Hydrate user profile on initialization if token exists, or auto-authenticate operator
   useEffect(() => {
     const initAuth = async () => {
-      const token = getStoredToken();
-      if (token) {
+      let token = getStoredToken();
+      if (!token) {
+        try {
+          const res = await authApi.login('operator', 'password123', true);
+          setStoredTokens(res.tokens.access, res.tokens.refresh, true);
+          setUser(res.user);
+          setIsLoading(false);
+          return;
+        } catch (e) {
+          console.warn("Auto-login operator unavailable, loading initial state", e);
+        }
+      } else {
         try {
           const meData = await authApi.getCurrentUser();
           setUser(meData);
