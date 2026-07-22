@@ -1,0 +1,91 @@
+name: Momentum CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend-tests:
+    name: Backend Test Suite & Health Check
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: momentum_db
+          POSTGRES_USER: momentum_user
+          POSTGRES_PASSWORD: momentum_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Run Django Health Check & Migrations
+        env:
+          DB_ENGINE: postgresql
+          DB_NAME: momentum_db
+          DB_USER: momentum_user
+          DB_PASSWORD: momentum_password
+          DB_HOST: localhost
+          DB_PORT: 5432
+          SECRET_KEY: ci-cd-secret-key-test-environment
+        run: |
+          python backend/manage.py check
+          python backend/manage.py migrate
+
+      - name: Execute Django Test Suite
+        env:
+          DB_ENGINE: postgresql
+          DB_NAME: momentum_db
+          DB_USER: momentum_user
+          DB_PASSWORD: momentum_password
+          DB_HOST: localhost
+          DB_PORT: 5432
+          SECRET_KEY: ci-cd-secret-key-test-environment
+        run: |
+          python backend/manage.py test apps.authentication apps.tasks apps.goals apps.focus
+
+  frontend-build:
+    name: Frontend Build & Unit Test Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run Vitest Suite
+        working-directory: ./frontend
+        run: npx vitest run
+
+      - name: Build Vite Application
+        working-directory: ./frontend
+        run: npm run build

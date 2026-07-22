@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+
+import { useMemo } from 'react';
 import { AICoachWidget } from '../ai_coach/AICoachWidget';
 import { useAuth } from '../../context/AuthContext';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { analyticsApi } from '../../api/analyticsApi';
+import { tasksApi } from '../../api/tasksApi';
 import {
   MOCK_TASKS,
   MOCK_ANALYTICS_DATA,
@@ -38,7 +42,29 @@ import { motion } from 'framer-motion';
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [tasks, setTasks] = useState(MOCK_TASKS);
+  const queryClient = useQueryClient();
+
+  // Fetch telemetry
+  const { data: telemetryData } = useQuery({
+    queryKey: ['telemetry'],
+    queryFn: analyticsApi.getTelemetry,
+  });
+
+  // Fetch tasks
+  const { data: serverTasks } = useQuery({
+    queryKey: ['tasks'],
+    queryFn: tasksApi.getTasks,
+  });
+
+  const tasks = serverTasks ?? MOCK_TASKS;
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<any> }) =>
+      tasksApi.updateTask(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
 
   // Time of day calculation
   const getGreeting = () => {
@@ -55,17 +81,47 @@ export const DashboardPage: React.FC = () => {
     day: 'numeric',
   });
 
-  const nextTask = tasks.find((t) => t.status === 'TODO' || t.status === 'IN_PROGRESS') || tasks[0];
+  const nextTask = tasks.find((t) => t.status === 'TODO' || t.status === 'IN_PROGRESS') || tasks[0] || null;
 
-  const toggleTask = (id: string) => {
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.id === id
-          ? { ...t, status: t.status === 'COMPLETED' ? 'IN_PROGRESS' : 'COMPLETED' }
-          : t
-      )
-    );
+  const toggleTask = async (id: string) => {
+    const taskToToggle = tasks.find((t) => String(t.id) === String(id));
+    if (!taskToToggle) return;
+    const nextStatus = taskToToggle.status === 'COMPLETED' ? 'IN_PROGRESS' : 'COMPLETED';
+    await updateMutation.mutateAsync({ id, data: { status: nextStatus } });
   };
+
+  const momentumScore = telemetryData?.overview?.momentumScore ?? 94;
+  
+  const activeMission = tasks.find((t) => t.priority === 'CRITICAL' && t.status !== 'COMPLETED')
+    || tasks.find((t) => t.priority === 'HIGH' && t.status !== 'COMPLETED')
+    || tasks.find((t) => t.status !== 'COMPLETED')
+    || null;
+
+  const activeMissionTitle = activeMission?.title || "No Active Mission";
+  const activeMissionPriority = activeMission?.priority || "None";
+  
+  const missionProgress = activeMission 
+    ? (activeMission.status === 'COMPLETED' ? 100 : activeMission.status === 'IN_PROGRESS' ? 65 : 25) 
+    : 0;
+
+  const currentDayName = new Date().toLocaleDateString('en-US', { weekday: 'short' });
+  const todayTelemetry = telemetryData?.dailyData?.find((d) => d.day === currentDayName)
+    || telemetryData?.dailyData?.[telemetryData.dailyData.length - 1]
+    || { focusHours: 4.5 };
+  
+  const focusTimeToday = todayTelemetry.focusHours;
+  const focusProgressPercent = Math.min(Math.round((focusTimeToday / 6.0) * 100), 100);
+
+  const streakDays = telemetryData?.overview?.currentStreakDays ?? 14;
+
+  const chartData = useMemo(() => {
+    if (!telemetryData?.dailyData) return MOCK_ANALYTICS_DATA;
+    return telemetryData.dailyData.map((d) => ({
+      day: d.day,
+      focusHours: d.focusHours,
+      efficiency: d.completionRate !== undefined ? d.completionRate : (d as any).efficiency ?? 90,
+    }));
+  }, [telemetryData]);
 
   return (
     <div className="space-y-6 pb-8">
@@ -149,7 +205,7 @@ export const DashboardPage: React.FC = () => {
 
           <div className="my-3 flex items-baseline gap-2">
             <span className="text-4xl font-extrabold font-mono text-cyan-400 drop-shadow-[0_0_15px_rgba(0,240,255,0.4)]">
-              94
+              {momentumScore}
             </span>
             <span className="text-xs font-mono text-slate-500">/ 100</span>
           </div>
@@ -160,7 +216,7 @@ export const DashboardPage: React.FC = () => {
               <span className="text-cyan-400">OPTIMAL</span>
             </div>
             <div className="w-full h-1.5 rounded-full bg-slate-950 overflow-hidden">
-              <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-emerald-400 w-[94%]" />
+              <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-emerald-400" style={{ width: `${momentumScore}%` }} />
             </div>
           </div>
         </Card>
@@ -171,20 +227,20 @@ export const DashboardPage: React.FC = () => {
             <span className="text-xs font-mono uppercase text-slate-400 tracking-wider">
               TODAY'S MISSION
             </span>
-            <Badge variant="green" pulse>
-              ACTIVE
+            <Badge variant="green" pulse={!!activeMission}>
+              {activeMission ? 'ACTIVE' : 'IDLE'}
             </Badge>
           </div>
 
           <div className="my-2">
             <p className="text-sm font-semibold text-slate-100 line-clamp-2">
-              Deploy Zero-Trust Authentication Protocol
+              {activeMissionTitle}
             </p>
-            <p className="text-xs text-slate-400 mt-0.5">Priority: Critical</p>
+            <p className="text-xs text-slate-400 mt-0.5">Priority: {activeMissionPriority}</p>
           </div>
 
           <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-800">
-            <span className="text-cyan-400 font-mono">Progress: 65%</span>
+            <span className="text-cyan-400 font-mono">Progress: {missionProgress}%</span>
             <button
               onClick={() => navigate('/tasks')}
               className="text-[11px] font-semibold text-emerald-400 hover:underline flex items-center gap-0.5"
@@ -203,24 +259,30 @@ export const DashboardPage: React.FC = () => {
             <Clock className="w-4 h-4 text-amber-400" />
           </div>
 
-          <div className="my-2">
-            <p className="text-sm font-semibold text-slate-100 truncate">
-              {nextTask.title}
-            </p>
-            <span className="text-xs font-mono text-amber-400 block mt-0.5">
-              Est: {nextTask.estimatedMinutes} mins
-            </span>
-          </div>
+          {nextTask ? (
+            <>
+              <div className="my-2">
+                <p className="text-sm font-semibold text-slate-100 truncate">
+                  {nextTask.title}
+                </p>
+                <span className="text-xs font-mono text-amber-400 block mt-0.5">
+                  Est: {nextTask.estimatedMinutes} mins
+                </span>
+              </div>
 
-          <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-800">
-            <span className="text-slate-400 text-[11px]">Due Today</span>
-            <button
-              onClick={() => toggleTask(nextTask.id)}
-              className="text-[11px] font-semibold text-cyan-400 hover:underline flex items-center gap-0.5"
-            >
-              Complete <CheckCircle2 className="w-3 h-3" />
-            </button>
-          </div>
+              <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-800">
+                <span className="text-slate-400 text-[11px]">Due Today</span>
+                <button
+                  onClick={() => toggleTask(nextTask.id)}
+                  className="text-[11px] font-semibold text-cyan-400 hover:underline flex items-center gap-0.5"
+                >
+                  Complete <CheckCircle2 className="w-3 h-3" />
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="my-4 text-xs text-slate-500 font-mono">No tasks remaining</div>
+          )}
         </Card>
 
         {/* Widget 4: Focus Time Today */}
@@ -234,18 +296,18 @@ export const DashboardPage: React.FC = () => {
 
           <div className="my-3 flex items-baseline gap-2">
             <span className="text-3xl font-extrabold font-mono text-slate-100">
-              4.5 <span className="text-xs font-normal text-slate-400">hrs</span>
+              {focusTimeToday.toFixed(1)} <span className="text-xs font-normal text-slate-400">hrs</span>
             </span>
             <span className="text-xs font-mono text-cyan-400">/ 6.0 goal</span>
           </div>
 
           <div className="space-y-1">
             <div className="flex justify-between text-[11px] font-mono text-slate-400">
-              <span>3 Sessions Completed</span>
-              <span className="text-emerald-400">75%</span>
+              <span>Today's Sessions</span>
+              <span className="text-emerald-400">{focusProgressPercent}%</span>
             </div>
             <div className="w-full h-1.5 rounded-full bg-slate-950 overflow-hidden">
-              <div className="h-full rounded-full bg-cyan-400 w-[75%]" />
+              <div className="h-full rounded-full bg-cyan-400" style={{ width: `${focusProgressPercent}%` }} />
             </div>
           </div>
         </Card>
@@ -261,7 +323,7 @@ export const DashboardPage: React.FC = () => {
 
           <div className="my-3 flex items-baseline gap-2">
             <span className="text-4xl font-extrabold font-mono text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]">
-              14
+              {streakDays}
             </span>
             <span className="text-xs font-mono text-slate-400">Days Active</span>
           </div>
@@ -302,7 +364,7 @@ export const DashboardPage: React.FC = () => {
 
           <div className="h-72 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={MOCK_ANALYTICS_DATA}>
+              <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="focusGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#00f0ff" stopOpacity={0.35} />
