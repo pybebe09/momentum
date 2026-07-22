@@ -51,7 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <span className="font-extrabold text-sm tracking-wider text-slate-100 uppercase">
+              <span className="font-extrabold text-sm tracking-wider text-primary-text uppercase">
                 MOMENTUM
               </span>
               <span className="text-[10px] block font-mono text-cyan-400">
@@ -86,7 +86,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
                     {
                       'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 shadow-[0_0_15px_rgba(0,240,255,0.15)]':
                         isActive,
-                      'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60': !isActive,
+                      'text-secondary-text hover:text-primary-text hover:bg-primary-bg/60': !isActive,
                     }
                   )
                 }
@@ -110,11 +110,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
       </div>
 
       {/* Sidebar Footer: Telemetry Badge & Logout */}
-      <div className="space-y-3 pt-4 border-t border-slate-800/80">
+      <div className="space-y-3 pt-4 border-t border-border-accent">
         {/* Telemetry Status Card */}
-        <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1">
+        <div className="p-3 rounded-xl bg-primary-bg/60 border border-border-accent space-y-1">
           <div className="flex items-center justify-between text-[11px] font-mono">
-            <span className="text-slate-400 flex items-center gap-1">
+            <span className="text-secondary-text flex items-center gap-1">
               <Activity className="w-3 h-3 text-emerald-400" /> SYSTEM
             </span>
             <span className="text-emerald-400 font-bold">ONLINE</span>
@@ -137,7 +137,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
   return (
     <>
       {/* Desktop Sidebar (Fixed Left Navigation) */}
-      <aside className="hidden lg:block w-64 border-r border-slate-800/80 bg-slate-950/80 backdrop-blur-xl h-screen sticky top-0 shrink-0">
+      <aside className="hidden lg:block w-64 border-r border-border-accent bg-secondary-bg/85 backdrop-blur-xl h-screen sticky top-0 shrink-0">
         {SidebarContent}
       </aside>
 
@@ -150,14 +150,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onCloseMobile}
-              className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+              className="absolute inset-0 bg-primary-bg/80 backdrop-blur-md"
             />
             <motion.aside
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-              className="relative w-72 bg-slate-950 border-r border-slate-800 h-full shadow-2xl z-10"
+              className="relative w-72 bg-secondary-bg border-r border-border-accent h-full shadow-2xl z-10"
             >
               {SidebarContent}
             </motion.aside>

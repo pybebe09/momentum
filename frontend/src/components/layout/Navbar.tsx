@@ -13,20 +13,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar }) => {
   const [showNotifications, setShowNotifications] = useState(false);
 
   return (
-    <header className="h-16 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-30 px-4 sm:px-6 flex items-center justify-between">
+    <header className="h-16 border-b border-border-accent bg-secondary-bg/85 backdrop-blur-xl sticky top-0 z-30 px-4 sm:px-6 flex items-center justify-between">
       {/* Left Mobile Menu Toggle & Brand */}
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleMobileSidebar}
           aria-label="Toggle Navigation Drawer"
-          className="lg:hidden p-2 rounded-xl border border-slate-800 text-slate-400 hover:text-slate-100 hover:bg-slate-900 transition-colors"
+          className="lg:hidden p-2 rounded-xl border border-border-accent text-secondary-text hover:text-primary-text hover:bg-primary-bg transition-colors"
         >
           <Menu className="w-5 h-5" />
         </button>
 
         <div className="hidden sm:flex items-center gap-2">
           <Shield className="w-5 h-5 text-cyan-400" />
-          <span className="font-extrabold text-sm tracking-wider text-slate-100 uppercase">
+          <span className="font-extrabold text-sm tracking-wider text-primary-text uppercase">
             MOMENTUM
           </span>
           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
@@ -42,9 +42,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar }) => {
           <input
             type="text"
             placeholder="Quick search commands, tasks, goals... (Ctrl + K)"
-            className="w-full pl-10 pr-12 py-2 rounded-xl text-xs font-mono bg-slate-900/60 border border-slate-800 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
+            className="w-full pl-10 pr-12 py-2 rounded-xl text-xs font-mono bg-primary-bg/60 border border-border-accent text-primary-text placeholder:text-secondary-text/80 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
           />
-          <kbd className="hidden sm:inline-block absolute right-3 text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-400">
+          <kbd className="hidden sm:inline-block absolute right-3 text-[10px] font-mono px-1.5 py-0.5 rounded bg-secondary-bg border border-border-accent text-secondary-text">
             ⌘K
           </kbd>
         </div>
@@ -60,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar }) => {
           <button
             onClick={() => setShowNotifications(!showNotifications)}
             aria-label="View Notifications"
-            className="p-2.5 rounded-xl border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-cyan-400 hover:border-cyan-400/40 transition-colors relative"
+            className="p-2.5 rounded-xl border border-border-accent bg-primary-bg/85 text-secondary-text hover:text-cyan-400 hover:border-cyan-400/40 transition-colors relative"
           >
             <Bell className="w-4 h-4" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
@@ -72,10 +72,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar }) => {
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 mt-2 w-80 p-4 rounded-2xl bg-slate-950 border border-slate-800 shadow-2xl z-50 space-y-3"
+                className="absolute right-0 mt-2 w-80 p-4 rounded-2xl bg-secondary-bg border border-border-accent shadow-2xl z-50 space-y-3"
               >
-                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                  <span className="text-xs font-bold text-slate-100 font-mono uppercase">
+                <div className="flex items-center justify-between border-b border-border-accent pb-2">
+                  <span className="text-xs font-bold text-primary-text font-mono uppercase">
                     SYSTEM NOTIFICATIONS
                   </span>
                   <button
@@ -110,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar }) => {
         </div>
 
         {/* User Profile Chip */}
-        <div className="hidden md:flex items-center gap-3 pl-2 border-l border-slate-800">
+        <div className="hidden md:flex items-center gap-3 pl-2 border-l border-border-accent">
           <img
             src={
               user?.avatarUrl ||
@@ -120,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar }) => {
             className="w-8 h-8 rounded-xl object-cover border border-cyan-400/40"
           />
           <div className="text-left text-xs">
-            <span className="font-bold text-slate-200 block leading-tight">
+            <span className="font-bold text-primary-text block leading-tight">
               {user?.firstName || 'Operator'}
             </span>
             <span className="text-[10px] font-mono text-cyan-400 leading-tight">

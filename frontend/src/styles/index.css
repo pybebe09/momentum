@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
 @theme {
+  --color-primary-bg: var(--bg-primary);
+  --color-secondary-bg: var(--bg-secondary);
+  --color-border-accent: var(--border-color);
+  --color-primary-text: var(--text-primary);
+  --color-secondary-text: var(--text-secondary);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-green: var(--accent-green);
+
   --color-cyber-dark: #080c14;
   --color-cyber-card: #0f172a;
   --color-cyber-panel: #131c31;

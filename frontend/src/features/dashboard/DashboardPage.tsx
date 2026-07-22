@@ -212,8 +212,8 @@ export const DashboardPage: React.FC = () => {
 
           <div className="space-y-1">
             <div className="flex justify-between text-[11px] font-mono">
-              <span className="text-emerald-400 font-semibold">+5.2% vs last cycle</span>
-              <span className="text-cyan-400">OPTIMAL</span>
+              <span className="text-accent-green font-semibold">+5.2% vs last cycle</span>
+              <span className="text-accent-blue">OPTIMAL</span>
             </div>
             <div className="w-full h-1.5 rounded-full bg-slate-950 overflow-hidden">
               <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-emerald-400" style={{ width: `${momentumScore}%` }} />
@@ -233,17 +233,17 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <div className="my-2">
-            <p className="text-sm font-semibold text-slate-100 line-clamp-2">
+            <p className="text-sm font-semibold text-primary-text line-clamp-2">
               {activeMissionTitle}
             </p>
-            <p className="text-xs text-slate-400 mt-0.5">Priority: {activeMissionPriority}</p>
+            <p className="text-xs text-secondary-text mt-0.5">Priority: {activeMissionPriority}</p>
           </div>
 
-          <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-800">
-            <span className="text-cyan-400 font-mono">Progress: {missionProgress}%</span>
+          <div className="flex items-center justify-between text-xs pt-1 border-t border-border-accent">
+            <span className="text-accent-blue font-mono">Progress: {missionProgress}%</span>
             <button
               onClick={() => navigate('/tasks')}
-              className="text-[11px] font-semibold text-emerald-400 hover:underline flex items-center gap-0.5"
+              className="text-[11px] font-semibold text-accent-green hover:underline flex items-center gap-0.5"
             >
               Execute <ChevronRight className="w-3 h-3" />
             </button>
@@ -262,7 +262,7 @@ export const DashboardPage: React.FC = () => {
           {nextTask ? (
             <>
               <div className="my-2">
-                <p className="text-sm font-semibold text-slate-100 truncate">
+                <p className="text-sm font-semibold text-primary-text truncate">
                   {nextTask.title}
                 </p>
                 <span className="text-xs font-mono text-amber-400 block mt-0.5">
@@ -270,11 +270,11 @@ export const DashboardPage: React.FC = () => {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-800">
-                <span className="text-slate-400 text-[11px]">Due Today</span>
+              <div className="flex items-center justify-between text-xs pt-1 border-t border-border-accent">
+                <span className="text-secondary-text text-[11px]">Due Today</span>
                 <button
                   onClick={() => toggleTask(nextTask.id)}
-                  className="text-[11px] font-semibold text-cyan-400 hover:underline flex items-center gap-0.5"
+                  className="text-[11px] font-semibold text-accent-blue hover:underline flex items-center gap-0.5"
                 >
                   Complete <CheckCircle2 className="w-3 h-3" />
                 </button>
@@ -295,16 +295,16 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <div className="my-3 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold font-mono text-slate-100">
-              {focusTimeToday.toFixed(1)} <span className="text-xs font-normal text-slate-400">hrs</span>
+            <span className="text-3xl font-extrabold font-mono text-primary-text">
+              {focusTimeToday.toFixed(1)} <span className="text-xs font-normal text-secondary-text">hrs</span>
             </span>
-            <span className="text-xs font-mono text-cyan-400">/ 6.0 goal</span>
+            <span className="text-xs font-mono text-accent-blue">/ 6.0 goal</span>
           </div>
 
           <div className="space-y-1">
-            <div className="flex justify-between text-[11px] font-mono text-slate-400">
+            <div className="flex justify-between text-[11px] font-mono text-secondary-text">
               <span>Today's Sessions</span>
-              <span className="text-emerald-400">{focusProgressPercent}%</span>
+              <span className="text-accent-green">{focusProgressPercent}%</span>
             </div>
             <div className="w-full h-1.5 rounded-full bg-slate-950 overflow-hidden">
               <div className="h-full rounded-full bg-cyan-400" style={{ width: `${focusProgressPercent}%` }} />
@@ -315,7 +315,7 @@ export const DashboardPage: React.FC = () => {
         {/* Widget 5: Current Streak */}
         <Card glow="amber" className="p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono uppercase text-slate-400 tracking-wider">
+            <span className="text-xs font-mono uppercase text-secondary-text tracking-wider">
               CURRENT STREAK
             </span>
             <Flame className="w-4 h-4 text-amber-400 animate-pulse" />
@@ -325,12 +325,12 @@ export const DashboardPage: React.FC = () => {
             <span className="text-4xl font-extrabold font-mono text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]">
               {streakDays}
             </span>
-            <span className="text-xs font-mono text-slate-400">Days Active</span>
+            <span className="text-xs font-mono text-secondary-text">Days Active</span>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 border-t border-slate-800 pt-1">
+          <div className="flex items-center justify-between text-[11px] font-mono text-secondary-text border-t border-border-accent pt-1">
             <span>Multiplier: 1.5x</span>
-            <span className="text-emerald-400 font-semibold">BEST RECORD</span>
+            <span className="text-accent-green font-semibold">BEST RECORD</span>
           </div>
         </Card>
       </div>
@@ -342,21 +342,21 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-semibold text-slate-100">
+                <h3 className="text-base font-semibold text-primary-text">
                   Weekly Operational Progress
                 </h3>
                 <Badge variant="blue">TELEMETRY</Badge>
               </div>
-              <p className="text-xs text-slate-400 font-mono">
+              <p className="text-xs text-secondary-text font-mono">
                 MONITORING FOCUS HOURS VS EFFICIENCY INDEX
               </p>
             </div>
 
             <div className="flex items-center gap-3 text-xs font-mono">
-              <span className="flex items-center gap-1.5 text-cyan-400">
+              <span className="flex items-center gap-1.5 text-accent-blue">
                 <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block" /> Focus Hours
               </span>
-              <span className="flex items-center gap-1.5 text-emerald-400">
+              <span className="flex items-center gap-1.5 text-accent-green">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block" /> Efficiency %
               </span>
             </div>
@@ -415,12 +415,12 @@ export const DashboardPage: React.FC = () => {
           <Card glow="green" className="p-6 relative overflow-hidden space-y-4 border-emerald-500/30">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-accent-green">
                   <Bot className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-100">AI Operational Insight</h3>
-                  <span className="text-[10px] font-mono text-emerald-400">NEURAL TELEMETRY ENGINE</span>
+                  <h3 className="text-sm font-semibold text-primary-text">AI Operational Insight</h3>
+                  <span className="text-[10px] font-mono text-accent-green">NEURAL TELEMETRY ENGINE</span>
                 </div>
               </div>
               <Badge variant="green" pulse>
@@ -428,9 +428,9 @@ export const DashboardPage: React.FC = () => {
               </Badge>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2 text-xs">
-              <p className="text-slate-200 leading-relaxed font-light">
-                "Analysis indicates your peak flow productivity occurs between <span className="text-cyan-400 font-mono font-semibold">09:00 AM – 11:30 AM</span>. Completing high-complexity security tasks during this window increases weekly velocity by <span className="text-emerald-400 font-bold">+18%</span>."
+            <div className="p-3.5 rounded-xl bg-primary-bg/60 border border-border-accent space-y-2 text-xs">
+              <p className="text-primary-text leading-relaxed font-light">
+                "Analysis indicates your peak flow productivity occurs between <span className="text-accent-blue font-mono font-semibold">09:00 AM – 11:30 AM</span>. Completing high-complexity security tasks during this window increases weekly velocity by <span className="text-accent-green font-bold">+18%</span>."
               </p>
             </div>
 
@@ -448,20 +448,20 @@ export const DashboardPage: React.FC = () => {
           {/* System Security Telemetry Widget */}
           <Card glow="none" className="p-5 space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-200">System Telemetry</span>
-              <span className="text-cyan-400 font-mono flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> SECURE
+              <span className="font-semibold text-primary-text">System Telemetry</span>
+              <span className="text-accent-blue font-mono flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-accent-green" /> SECURE
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-              <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800">
-                <span className="text-slate-500 block text-[10px]">CPU ALLOCATION</span>
-                <span className="text-cyan-400 font-bold text-sm">{MOCK_TELEMETRY.cpuUsage}%</span>
+              <div className="p-2.5 rounded-xl bg-primary-bg/60 border border-border-accent">
+                <span className="text-secondary-text block text-[10px]">CPU ALLOCATION</span>
+                <span className="text-accent-blue font-bold text-sm">{MOCK_TELEMETRY.cpuUsage}%</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800">
-                <span className="text-slate-500 block text-[10px]">MEMORY POOL</span>
-                <span className="text-emerald-400 font-bold text-sm">{MOCK_TELEMETRY.memoryUsage}%</span>
+              <div className="p-2.5 rounded-xl bg-primary-bg/60 border border-border-accent">
+                <span className="text-secondary-text block text-[10px]">MEMORY POOL</span>
+                <span className="text-accent-green font-bold text-sm">{MOCK_TELEMETRY.memoryUsage}%</span>
               </div>
             </div>
           </Card>
@@ -475,10 +475,10 @@ export const DashboardPage: React.FC = () => {
       <Card glow="none" className="p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base font-semibold text-slate-100">
+            <h3 className="text-base font-semibold text-primary-text">
               Active Security & Operation Tasks
             </h3>
-            <p className="text-xs text-slate-400 font-mono">
+            <p className="text-xs text-secondary-text font-mono">
               REAL-TIME MISSION BACKLOG & STATUS
             </p>
           </div>
@@ -497,15 +497,15 @@ export const DashboardPage: React.FC = () => {
             <motion.div
               key={task.id}
               whileHover={{ x: 3 }}
-              className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-cyan-500/30 flex items-center justify-between gap-4 transition-all"
+              className="p-4 rounded-xl bg-primary-bg/60 border border-border-accent hover:border-cyan-500/30 flex items-center justify-between gap-4 transition-all"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <button
                   onClick={() => toggleTask(task.id)}
                   className={`p-1 rounded-lg border transition-colors ${
                     task.status === 'COMPLETED'
-                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                      : 'border-slate-700 text-slate-500 hover:border-cyan-400'
+                      ? 'bg-emerald-500/20 text-accent-green border-emerald-500/40'
+                      : 'border-border-accent text-secondary-text hover:border-cyan-400'
                   }`}
                 >
                   <CheckCircle2 className="w-4 h-4" />
@@ -514,13 +514,13 @@ export const DashboardPage: React.FC = () => {
                 <div className="min-w-0">
                   <span
                     className={`text-sm font-semibold block truncate ${
-                      task.status === 'COMPLETED' ? 'line-through text-slate-500' : 'text-slate-200'
+                      task.status === 'COMPLETED' ? 'line-through text-secondary-text' : 'text-primary-text'
                     }`}
                   >
                     {task.title}
                   </span>
-                  <div className="flex items-center gap-3 text-[11px] font-mono text-slate-500">
-                    <span className="text-cyan-400">{task.category}</span>
+                  <div className="flex items-center gap-3 text-[11px] font-mono text-secondary-text">
+                    <span className="text-accent-blue">{task.category}</span>
                     <span>Due: {task.dueDate}</span>
                   </div>
                 </div>
