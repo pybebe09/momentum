@@ -30,7 +30,7 @@ export const GoalsPage: React.FC = () => {
 
   // Local state fallback for initial display
   const [localGoals, setLocalGoals] = useState<GoalItem[]>(MOCK_GOALS);
-  const goals = (serverGoals && serverGoals.length > 0) ? serverGoals : localGoals;
+  const goals = serverGoals ?? localGoals;
 
   // Filter & Search states
   const [search, setSearch] = useState('');
@@ -54,7 +54,7 @@ export const GoalsPage: React.FC = () => {
       goalsApi.updateGoal(id, data),
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ['goals'] });
-      setLocalGoals((prev) => prev.map((g) => (g.id === updated.id ? updated : g)));
+      setLocalGoals((prev) => prev.map((g) => (String(g.id) === String(updated.id) ? updated : g)));
     },
   });
 
@@ -62,7 +62,7 @@ export const GoalsPage: React.FC = () => {
     mutationFn: (id: string) => goalsApi.deleteGoal(id),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['goals'] });
-      setLocalGoals((prev) => prev.filter((g) => g.id !== id));
+      setLocalGoals((prev) => prev.filter((g) => String(g.id) !== String(id)));
     },
   });
 

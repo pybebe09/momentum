@@ -31,7 +31,7 @@ export const JournalPage: React.FC = () => {
 
   // Local fallback if initial backend query returns empty array
   const [localEntries, setLocalEntries] = useState<JournalEntry[]>(MOCK_JOURNAL_ENTRIES);
-  const entries = (serverEntries && serverEntries.length > 0) ? serverEntries : localEntries;
+  const entries = serverEntries ?? localEntries;
 
   // Search & Tag Filter states
   const [search, setSearch] = useState('');
@@ -56,7 +56,7 @@ export const JournalPage: React.FC = () => {
       journalApi.updateEntry(id, data),
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ['journal'] });
-      setLocalEntries((prev) => prev.map((e) => (e.id === updated.id ? updated : e)));
+      setLocalEntries((prev) => prev.map((item) => (String(item.id) === String(updated.id) ? updated : item)));
     },
   });
 
@@ -64,7 +64,7 @@ export const JournalPage: React.FC = () => {
     mutationFn: (id: string) => journalApi.deleteEntry(id),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['journal'] });
-      setLocalEntries((prev) => prev.filter((e) => e.id !== id));
+      setLocalEntries((prev) => prev.filter((item) => String(item.id) !== String(id)));
     },
   });
 

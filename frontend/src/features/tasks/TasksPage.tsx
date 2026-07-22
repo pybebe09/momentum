@@ -32,7 +32,7 @@ export const TasksPage: React.FC = () => {
 
   // Local fallback if server returns empty list initially
   const [localTasks, setLocalTasks] = useState<TaskItem[]>(MOCK_TASKS);
-  const tasks = (serverTasks && serverTasks.length > 0) ? serverTasks : localTasks;
+  const tasks = serverTasks ?? localTasks;
 
   // Filter & Search states
   const [search, setSearch] = useState('');
@@ -58,7 +58,7 @@ export const TasksPage: React.FC = () => {
       tasksApi.updateTask(id, data),
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      setLocalTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
+      setLocalTasks((prev) => prev.map((t) => (String(t.id) === String(updated.id) ? updated : t)));
     },
   });
 
@@ -66,7 +66,7 @@ export const TasksPage: React.FC = () => {
     mutationFn: (id: string) => tasksApi.deleteTask(id),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      setLocalTasks((prev) => prev.filter((t) => t.id !== id));
+      setLocalTasks((prev) => prev.filter((t) => String(t.id) !== String(id)));
     },
   });
 
