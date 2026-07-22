@@ -35,7 +35,7 @@ class CurrentUserView(APIView):
         serializer = UserSerializer(request.user)
         return Response({
             **serializer.data,
-            'role': 'OPERATOR',
+            'role': 'CEO',
             'avatarUrl': profile.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80',
             'isEmailVerified': profile.is_email_verified,
             'authProvider': profile.auth_provider,
@@ -72,7 +72,7 @@ class CurrentUserView(APIView):
         serializer = UserSerializer(user)
         return Response({
             **serializer.data,
-            'role': 'OPERATOR',
+            'role': 'CEO',
             'avatarUrl': profile.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80',
             'isEmailVerified': profile.is_email_verified,
             'authProvider': profile.auth_provider,
@@ -115,7 +115,7 @@ class RegisterView(APIView):
             'tokens': tokens,
             'user': {
                 **user_serializer.data,
-                'role': 'OPERATOR',
+                'role': 'CEO',
                 'avatarUrl': profile.avatar_url,
                 'isEmailVerified': False,
                 'authProvider': 'EMAIL',
@@ -163,7 +163,7 @@ class LoginView(APIView):
             'tokens': tokens,
             'user': {
                 **user_serializer.data,
-                'role': 'OPERATOR',
+                'role': 'CEO',
                 'avatarUrl': profile.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80',
                 'isEmailVerified': profile.is_email_verified,
                 'authProvider': profile.auth_provider,
@@ -286,7 +286,7 @@ class GoogleLoginView(APIView):
             'tokens': tokens,
             'user': {
                 **user_serializer.data,
-                'role': 'OPERATOR',
+                'role': 'CEO',
                 'avatarUrl': profile.avatar_url,
                 'isEmailVerified': True,
                 'authProvider': 'GOOGLE',
@@ -330,7 +330,7 @@ class AppleLoginView(APIView):
             'tokens': tokens,
             'user': {
                 **user_serializer.data,
-                'role': 'OPERATOR',
+                'role': 'CEO',
                 'avatarUrl': profile.avatar_url,
                 'isEmailVerified': True,
                 'authProvider': 'APPLE',
