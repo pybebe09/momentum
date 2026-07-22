@@ -48,8 +48,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
     const checkStatus = async () => {
       const start = performance.now();
       try {
-        // Send request to live Render API
-        await fetch('https://momentum-backend-api.onrender.com/api/analytics/telemetry/', {
+        // Send request to live Render health API
+        await fetch('https://momentum-backend-api.onrender.com/api/health/', {
           method: 'HEAD',
         });
         setLatency(Math.round(performance.now() - start));

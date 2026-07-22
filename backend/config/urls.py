@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -10,7 +11,11 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
+def health_check(request):
+    return JsonResponse({"status": "healthy"})
+
 urlpatterns = [
+    path('api/health/', health_check, name='health_check'),
     path('admin/', admin.site.urls),
 
     # OpenAPI Schema & Interactive Documentation
