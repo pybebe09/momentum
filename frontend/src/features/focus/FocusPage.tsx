@@ -124,7 +124,7 @@ export const FocusPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-cyan-950/50 border border-cyan-500/20 backdrop-blur-xl">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-cyan-400">DEEP WORK ENGINE</span>
+            <span className="text-xs font-mono text-accent-blue">DEEP WORK ENGINE</span>
             <Badge variant="blue" pulse>
               FLOW STATE ACTIVE
             </Badge>
@@ -153,7 +153,7 @@ export const FocusPage: React.FC = () => {
         <Card glow="blue" className="lg:col-span-2 flex flex-col items-center justify-center p-8 lg:p-12 space-y-8 text-center relative overflow-hidden">
           {/* Current Task Selector Header */}
           <div className="w-full max-w-md space-y-2">
-            <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest block">
+            <span className="text-[10px] font-mono text-accent-blue uppercase tracking-widest block">
               CURRENT FOCUS MISSION
             </span>
             <select
@@ -233,7 +233,7 @@ export const FocusPage: React.FC = () => {
                 cx="144"
                 cy="144"
                 r="120"
-                className="stroke-cyan-400 transition-all duration-1000 ease-linear"
+                className="stroke-accent-blue transition-all duration-1000 ease-linear"
                 strokeWidth="10"
                 strokeDasharray={2 * Math.PI * 120}
                 strokeDashoffset={2 * Math.PI * 120 * (1 - progressPercent / 100)}
@@ -249,7 +249,7 @@ export const FocusPage: React.FC = () => {
               <span className="text-6xl font-mono font-extrabold tracking-widest text-slate-100 drop-shadow-[0_0_25px_rgba(0,240,255,0.4)]">
                 {formatTime(secondsLeft)}
               </span>
-              <p className="text-xs font-mono text-cyan-400 tracking-wider">
+              <p className="text-xs font-mono text-accent-blue tracking-wider">
                 {isActive ? '● IN FLOW STATE' : '○ SESSION PAUSED'}
               </p>
             </div>
@@ -326,11 +326,11 @@ export const FocusPage: React.FC = () => {
                 >
                   <div className="flex items-center justify-between text-xs font-semibold text-slate-200">
                     <span>{session.title}</span>
-                    <span className="text-cyan-400 font-mono">{session.durationMinutes} min</span>
+                    <span className="text-accent-blue font-mono">{session.durationMinutes} min</span>
                   </div>
                   <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
                     <span>{session.completedAt}</span>
-                    <span className="text-emerald-400">Rating: ★ {session.productivityRating}/5</span>
+                    <span className="text-accent-green">Rating: ★ {session.productivityRating}/5</span>
                   </div>
                 </div>
               ))}
@@ -345,7 +345,7 @@ export const FocusPage: React.FC = () => {
                 onClick={() => setIsMuted(!isMuted)}
                 className="p-1 rounded text-slate-400 hover:text-slate-200"
               >
-                {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
+                {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-accent-blue" />}
               </button>
             </div>
             <p className="text-xs text-slate-400 font-light">

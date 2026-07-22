@@ -178,8 +178,8 @@ export const AnalyticsPage: React.FC = () => {
               <AreaChart data={dailyData}>
                 <defs>
                   <linearGradient id="colorDailyFocus" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00f0ff" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#00f0ff" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="var(--accent-blue)" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="var(--accent-blue)" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="day" stroke="#64748b" fontSize={11} />
@@ -195,7 +195,7 @@ export const AnalyticsPage: React.FC = () => {
                 <Area
                   type="monotone"
                   dataKey="focusHours"
-                  stroke="#00f0ff"
+                  stroke="var(--accent-blue)"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorDailyFocus)"
@@ -229,8 +229,8 @@ export const AnalyticsPage: React.FC = () => {
                     color: '#f8fafc',
                   }}
                 />
-                <Bar dataKey="focusHours" fill="#00f0ff" radius={[4, 4, 0, 0]} name="Focus Hours" />
-                <Bar dataKey="studyHours" fill="#00ff9d" radius={[4, 4, 0, 0]} name="Study Hours" />
+                <Bar dataKey="focusHours" fill="var(--accent-blue)" radius={[4, 4, 0, 0]} name="Focus Hours" />
+                <Bar dataKey="studyHours" fill="var(--accent-green)" radius={[4, 4, 0, 0]} name="Study Hours" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -262,7 +262,7 @@ export const AnalyticsPage: React.FC = () => {
                     color: '#f8fafc',
                   }}
                 />
-                <Bar dataKey="completedTasks" fill="#00ff9d" radius={[6, 6, 0, 0]} name="Tasks Completed" />
+                <Bar dataKey="completedTasks" fill="var(--accent-green)" radius={[6, 6, 0, 0]} name="Tasks Completed" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -283,8 +283,8 @@ export const AnalyticsPage: React.FC = () => {
               <AreaChart data={monthlyData}>
                 <defs>
                   <linearGradient id="colorMonthly" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00f0ff" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#00f0ff" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="var(--accent-blue)" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="var(--accent-blue)" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="month" stroke="#64748b" fontSize={11} />
@@ -300,7 +300,7 @@ export const AnalyticsPage: React.FC = () => {
                 <Area
                   type="monotone"
                   dataKey="tasks"
-                  stroke="#00f0ff"
+                  stroke="var(--accent-blue)"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorMonthly)"
