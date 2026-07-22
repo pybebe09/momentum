@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { Card } from '../../components/ui/Card';
@@ -23,7 +23,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const SettingsPage: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateProfile } = useAuth();
   const { theme, setTheme } = useTheme();
 
   // Tab State
@@ -65,26 +65,57 @@ export const SettingsPage: React.FC = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteConfirmationText, setDeleteConfirmationText] = useState('');
 
+  // Sync form inputs when user context resolves/updates
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+      setFirstName(user.firstName || '');
+      setLastName(user.lastName || '');
+      setEmail(user.email);
+      setAvatarUrl(
+        user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80'
+      );
+    }
+  }, [user]);
+
   const triggerSave = (msg: string) => {
     setSavedMessage(msg);
     setTimeout(() => setSavedMessage(null), 3000);
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    triggerSave('Operator profile settings updated successfully.');
+    try {
+      await updateProfile({
+        username,
+        email,
+        firstName,
+        lastName,
+        avatarUrl,
+      });
+      triggerSave('Operator profile settings updated successfully.');
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Failed to update profile.');
+    }
   };
 
-  const handleSaveSecurity = (e: React.FormEvent) => {
+  const handleSaveSecurity = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       alert('Passphrases do not match.');
       return;
     }
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-    triggerSave('Security passphrase updated successfully.');
+    try {
+      await updateProfile({
+        password: newPassword,
+      });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      triggerSave('Security passphrase updated successfully.');
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Failed to update passphrase.');
+    }
   };
 
   const handleExportData = () => {

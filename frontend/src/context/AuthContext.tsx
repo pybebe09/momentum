@@ -20,6 +20,7 @@ interface AuthContextType {
   resetPassword: (token: string, newPassword: string) => Promise<void>;
   verifyEmail: (token: string) => Promise<boolean>;
   logout: () => void;
+  updateProfile: (data: Partial<User & { avatarUrl?: string; password?: string }>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -123,6 +124,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const updateProfile = async (data: Partial<User & { avatarUrl?: string; password?: string }>) => {
+    const updatedUser = await authApi.updateProfile(data);
+    setUser(updatedUser);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -137,6 +143,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         resetPassword,
         verifyEmail,
         logout,
+        updateProfile,
       }}
     >
       {children}

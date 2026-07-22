@@ -41,6 +41,43 @@ class CurrentUserView(APIView):
             'authProvider': profile.auth_provider,
         })
 
+    @extend_schema(summary="Update Current Authenticated Operator Profile", responses={200: UserSerializer})
+    def put(self, request):
+        user = request.user
+        profile, _ = UserProfile.objects.get_or_create(user=user)
+        
+        username = request.data.get('username')
+        email = request.data.get('email')
+        first_name = request.data.get('firstName') or request.data.get('first_name')
+        last_name = request.data.get('lastName') or request.data.get('last_name')
+        avatar_url = request.data.get('avatarUrl') or request.data.get('avatar_url')
+        password = request.data.get('password')
+        
+        if username:
+            user.username = username
+        if email:
+            user.email = email
+        if first_name is not None:
+            user.first_name = first_name
+        if last_name is not None:
+            user.last_name = last_name
+        if password:
+            user.set_password(password)
+        user.save()
+        
+        if avatar_url is not None:
+            profile.avatar_url = avatar_url
+            profile.save()
+            
+        serializer = UserSerializer(user)
+        return Response({
+            **serializer.data,
+            'role': 'OPERATOR',
+            'avatarUrl': profile.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80',
+            'isEmailVerified': profile.is_email_verified,
+            'authProvider': profile.auth_provider,
+        })
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 

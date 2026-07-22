@@ -81,6 +81,11 @@ export const authApi = {
     return response.data;
   },
 
+  updateProfile: async (data: Partial<User & { avatarUrl?: string; password?: string }>) => {
+    const response = await axiosClient.put<User & { isEmailVerified: boolean; authProvider: string; avatarUrl?: string }>('/auth/me/', data);
+    return response.data;
+  },
+
   refreshToken: async (refresh: string) => {
     const response = await axiosClient.post<{ access: string; refresh?: string }>('/auth/token/refresh/', {
       refresh,
